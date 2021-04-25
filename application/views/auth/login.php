@@ -14,6 +14,7 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                     </div>
+                                    <?= $this->session->flashdata('message'); ?>
                                     <form class="user" method="POST" action="<?= base_url('auth') ?>">
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user" id="email" name="email" placeholder="Enter Email Address...">
@@ -28,9 +29,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <a href="index.html" class="btn btn-primary btn-user btn-block">
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Login
-                                        </a>
+                                        </button>
                                     </form>
                                     <hr>
                                     <div class="text-center">
