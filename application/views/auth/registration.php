@@ -12,15 +12,18 @@
                         <form class="user" method="POST" action="<?= base_url('auth/registration'); ?>">
                             <div class="form-group">
                                 <input type="name" class="form-control form-control-user" id="name" name="name" placeholder="Full Name" value="<?= set_value('name') ?>">
+                                <?= form_error('name', '<small class="text-danger pl-3">', '</small>') ?>
                             </div>
                             <div class="form-group">
                                 <input type="email" class="form-control form-control-user" id="email" name="email" placeholder="Email Address" value="<?= set_value('email') ?>">
+                                <?= form_error('email', '<small class="text-danger pl-3">', '</small>'); ?>
                             </div>
-                            <div class="form-group row justify-content-center">
-                                <div class="col-sm-5 mb-3 mb-sm-0">
-                                    <input type="password" class="form-control form-control-user" name="password1" id="InputPassword" value="<?= set_value('password1') ?>" placeholder="Password">
+                            <div class="form-group row">
+                                <div class="col-sm-5 mb-2 mb-sm-0">
+                                    <input type="password" class="form-control form-control-user" name="password1" id="InputPassword" placeholder="Password">
+                                    <?= form_error('password1', '<small class="text-danger pl-3">', '</small>') ?>
                                 </div>
-                                <div class="col-sm-5 mb-3">
+                                <div class="col-sm-5 mb-2">
                                     <input type="password" class="form-control form-control-user" name="password2" id="RepaeatPassword" placeholder="Repeat Password">
                                 </div>
                                 <div class="col-sm-2 btn-group-lg">
