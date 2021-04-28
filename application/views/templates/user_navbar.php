@@ -3,8 +3,8 @@
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center" href="<?= base_url('admin') ?>">
-        <img class="rounded-circle img-profile float-left" src="<?= base_url('assets/img/') ?>logo.png" width="50" />
-        <div class="sidebar-brand-text mx-3">Onshop Admin</div>
+        <img class="rounded-circle img-profile float-left mx-auto" src="<?= base_url('assets/img/') ?>logo.png" width="50" />
+        <div class="sidebar-brand-text mx-auto">Onshop</div>
     </a>
 
     <!-- Divider -->
