@@ -1,5 +1,5 @@
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-danger sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center" href="<?= base_url('admin') ?>">
@@ -10,11 +10,11 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!-- Nav Item - My Profile -->
+    <!-- Nav Item -->
     <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('auth/logout'); ?>">
-            <i class="fas fa-fw fa-sign-out-alt"></i>
-            <span>Logout</span></a>
+        <a class="nav-link" href="<?= base_url('user/index') ?>">
+            <i class="fas fa-fw fa-home"></i>
+            <span>Home</span></a>
     </li>
 
     <!-- Divider -->

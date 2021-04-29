@@ -6,16 +6,66 @@ class User extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('user_model');
+        $this->load->helper('date');
         if (!$this->session->userdata('email')) {
             redirect('auth');
         }
     }
 
-    public function index()
+    public function index($url = null, $ext = null)
     {
-        $data['title'] = 'User Page';
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
+        $data = $this->user_model->get_Data();
+        if ($ext != null) {
+            $item = $this->user_model->getItemByCode($url)[0];
+            if ($ext === 'del') {
+                unset($_SESSION['shopping'][$url]);
+            } elseif ($ext === 'plus') {
+                $quantity = $item->stock - ($_SESSION['shopping'][$url] + 1);
+                if ($quantity > 0) {
+                    $_SESSION['shopping'][$url] += 1;
+                } else {
+                    $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Sorry! We are out of stock!</div>');
+                }
+            } elseif ($ext === 'min') {
+                if ($_SESSION['shopping'][$url] == 0) {
+                    unset($_SESSION['shopping'][$url]);
+                } else {
+                    $_SESSION['shopping'][$url] -= 1;
+                    if ($_SESSION['shopping'][$url] == 0) {
+                        unset($_SESSION['shopping'][$url]);
+                    }
+                }
+            }
+            redirect('user/index');
+        } elseif ($url === 'unset') {
+            $this->session->unset_userdata('shopping');
+        } else {
+            if ($url != null) {
+                $item = $this->user_model->getItemByCode($url)[0];
+                if (!isset($_SESSION['shopping'])) {
+                    $this->session->set_userdata('shopping');
+                }
+                if (isset($_SESSION['shopping'][$url])) {
+                    $quantity = $item->stock - $_SESSION['shopping'][$url];
+                    if ($quantity > 0) {
+                        $_SESSION['shopping'][$url] += 1;
+                    } else {
+                        $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Sorry! We are out of stock!</div>');
+                    }
+                } else {
+                    $quantity = (int) $item->stock;
+                    if ($quantity > 0) {
+                        $_SESSION['shopping'][$url] = 1;
+                    } else {
+                        $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Sorry! We are out of stock!</div>');
+                    }
+                }
+                redirect('user/index');
+            }
+        }
+        $data['data'] = $this->user_model->get_Item();
+        $data['title'] = "Home";
         $this->load->view('templates/header', $data);
         $this->load->view('templates/user_navbar', $data);
         $this->load->view('templates/topbar', $data);
