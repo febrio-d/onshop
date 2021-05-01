@@ -38,21 +38,27 @@ class User_model extends CI_Model
         return $data->result();
     }
 
-    public function getHistoryByuid($user_id)
+    public function getRecordByRId($user_id)
     {
-        $data = $this->db->where('user_id', $user_id)->order_by('id', 'DESC')->get('history');
+        $data = $this->db->where('user_id', $user_id)->order_by('record_id', 'DESC')->get('record');
         return $data->result();
     }
 
-    public function getHistoryAll()
+    public function getRecordAll()
     {
-        $data = $this->db->join('user', 'user.id = history.user_id')->order_by('id', 'DESC')->get_where('history', array('onDelete' => '1'));
+        $data = $this->db->join('user', 'user.id = record.user_id')->order_by('id', 'DESC')->get_where('history', array('onDelete' => '1'));
         return $data->result();
     }
 
     public function getDetailsHistory($hid)
     {
         $data = $this->db->where('history_id', $hid)->join('items', 'items.item_id = history.item_id')->get('history');
+        return $data->result();
+    }
+
+    public function getRecordByHId($hid)
+    {
+        $data = $this->db->where('history_id', $hid)->get('record');
         return $data->result();
     }
 }

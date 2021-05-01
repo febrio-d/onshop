@@ -98,22 +98,27 @@ class User extends CI_Controller
         $random = rand(0, 99999);
         foreach ($data as $item) {
             if (isset($shop[$item->item_id])) {
-                $user = $this->user_model->get_Data()['user'];
                 $hid = $this->user_model->getByCode($item->item_id);
                 $quantity = $shop[$item->item_id];
                 $history = [
-                    "user_id" => $user['id'],
-                    "item_id" => $hid['item_id'],
                     "history_id" => $random,
-                    "total" => $total,
-                    "paid" => $money,
+                    "item_id" => $item->item_id,
                     "quantity" => $quantity,
-                    "date" => now('Asia/Jakarta')
+                    "price" => $hid['price']
                 ];
                 $this->db->where('item_id', $item->item_id)->update('items', ['stock' => $hid['stock'] - $quantity]);
                 $this->db->insert("history", $history);
             }
         }
+        $user = $this->user_model->get_Data()['user'];
+        $record = [
+            "user_id" => $user['id'],
+            "history_id" => $random,
+            "total" => $total,
+            "date" => now('Asia/Jakarta'),
+            "paid" => $money
+        ];
+        $this->db->insert('record', $record);
         if ($this->db->affected_rows() > 0) {
             $this->session->unset_userdata('shopping');
             $this->session->set_flashdata('message', '<script>window.alert("Successfully made a purchase!");</script>');
@@ -125,7 +130,7 @@ class User extends CI_Controller
     {
         $data = $this->user_model->get_Data();
         $data['title'] = "History";
-        $data['history'] = $this->user_model->getHistoryByuid($data['user']['id']);
+        $data['history'] = $this->user_model->getRecordByRId($data['user']['id']);
         $this->load->view('templates/header', $data);
         $this->load->view('templates/user_navbar', $data);
         $this->load->view('templates/topbar', $data);
@@ -136,23 +141,19 @@ class User extends CI_Controller
     public function detail($hid = "")
     {
         if ($hid == "") {
-            $this->session->set_flashdata('error', '<script>window.alert("Error! Failed no code exists!");</script>');
-            redirect(base_url('user/histori'));
+            redirect('user/history');
         }
-        $data = $this->user_model->get_data();
-        $data['title'] = "Details History";
-        $data['histori'] = $this->user_model->getDetailsHistori($hid);
-        $this->load->view('templates/user_header', $data);
-        $this->load->view('templates/user_navbar', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('user/detail-histori', $data);
-        $this->load->view('templates/user_footer');
+        $data = $this->user_model->get_Data();
+        $data['title'] = "Bills";
+        $data['history'] = $this->user_model->getDetailsHistory($hid);
+        $data['record'] = $this->user_model->getRecordByHId($hid);
+        $this->load->view('user/detail', $data);
     }
 
     public function profile()
     {
         $data['title'] = "My Profile";
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data = $this->user_model->get_Data();
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/user_navbar', $data);
@@ -164,7 +165,7 @@ class User extends CI_Controller
     public function edit()
     {
         $data['title'] = 'Edit Profile';
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data = $this->user_model->get_Data();
 
         $this->form_validation->set_rules('name', 'Name', 'required|trim');
 

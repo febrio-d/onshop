@@ -9,7 +9,6 @@
                         <tr>
                             <th scope="col" width="3%">#</th>
                             <th>Purchase Code</th>
-                            <th>User ID</th>
                             <th>Total</th>
                             <th>Paid</th>
                             <th>Change</th>
@@ -21,7 +20,6 @@
                         <tr>
                             <th scope="col">#</th>
                             <th>Purchase Code</th>
-                            <th>User ID</th>
                             <th>Total</th>
                             <th>Paid</th>
                             <th>Change</th>
@@ -36,12 +34,11 @@
                             <tr>
                                 <th scope="row" class="text-center"><?= $i; ?>.</th>
                                 <td><?= $content->history_id; ?></td>
-                                <td><?= $content->user_id; ?></td>
                                 <td>Rp. <?= $content->total; ?></td>
                                 <td>Rp. <?= $content->paid; ?></td>
                                 <td class="btn-info">Rp. <?= $content->paid - $content->total; ?></td>
                                 <td><?= date("l jS \of F Y h:i:s A", $content->date); ?></td>
-                                <td><a href="<?= base_url('user/detail/') . $content->history_id; ?>" class="btn btn-primary"><i class="fas fa-fw fa-info"></i>Detail</a></td>
+                                <td><a href="<?= base_url('user/detail/') . $content->history_id; ?>" target="_blank" class="btn btn-primary"><i class="fas fa-fw fa-info"></i>Detail</a></td>
                             </tr>
                         <?php
                             $i++;
