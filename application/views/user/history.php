@@ -40,7 +40,7 @@
                                 <td>Rp. <?= $content->total; ?></td>
                                 <td>Rp. <?= $content->paid; ?></td>
                                 <td class="btn-info">Rp. <?= $content->paid - $content->total; ?></td>
-                                <td><?= date("D M Y H:i", $content->date); ?></td>
+                                <td><?= date("l jS \of F Y h:i:s A", $content->date); ?></td>
                                 <td><a href="<?= base_url('user/detail/') . $content->history_id; ?>" class="btn btn-primary"><i class="fas fa-fw fa-info"></i>Detail</a></td>
                             </tr>
                         <?php
