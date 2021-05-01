@@ -73,6 +73,82 @@ class User extends CI_Controller
         $this->load->view('templates/footer');
     }
 
+    public function checkout()
+    {
+        $data = $this->user_model->get_Data();
+        $data['data'] = $this->user_model->get_Item();
+        $data['title'] = "Check Out";
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/user_navbar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('user/checkout', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function add()
+    {
+        $money = $this->input->post('money');
+        $total = $this->input->post('total');
+        if ($money < $total) {
+            $this->session->set_flashdata('message', '<script>window.alert("The amount paid is insufficient!");</script>');
+            redirect('user/checkout');
+        }
+        $data = $this->user_model->get_Item();
+        $shop = $this->session->userdata('shopping');
+        $random = rand(0, 99999);
+        foreach ($data as $item) {
+            if (isset($shop[$item->item_id])) {
+                $user = $this->user_model->get_Data()['user'];
+                $hid = $this->user_model->getByCode($item->item_id);
+                $quantity = $shop[$item->item_id];
+                $history = [
+                    "user_id" => $user['id'],
+                    "item_id" => $hid['item_id'],
+                    "history_id" => $random,
+                    "total" => $total,
+                    "paid" => $money,
+                    "quantity" => $quantity,
+                    "date" => now('Asia/Jakarta')
+                ];
+                $this->db->where('item_id', $item->item_id)->update('items', ['stock' => $hid['stock'] - $quantity]);
+                $this->db->insert("history", $history);
+            }
+        }
+        if ($this->db->affected_rows() > 0) {
+            $this->session->unset_userdata('shopping');
+            $this->session->set_flashdata('message', '<script>window.alert("Successfully made a purchase!");</script>');
+            redirect('user/history');
+        }
+    }
+
+    public function history()
+    {
+        $data = $this->user_model->get_Data();
+        $data['title'] = "History";
+        $data['history'] = $this->user_model->getHistoryByuid($data['user']['id']);
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/user_navbar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('user/history', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function detail($hid = "")
+    {
+        if ($hid == "") {
+            $this->session->set_flashdata('error', '<script>window.alert("Error! Failed no code exists!");</script>');
+            redirect(base_url('user/histori'));
+        }
+        $data = $this->user_model->get_data();
+        $data['title'] = "Details History";
+        $data['histori'] = $this->user_model->getDetailsHistori($hid);
+        $this->load->view('templates/user_header', $data);
+        $this->load->view('templates/user_navbar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('user/detail-histori', $data);
+        $this->load->view('templates/user_footer');
+    }
+
     public function profile()
     {
         $data['title'] = "My Profile";

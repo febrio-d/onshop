@@ -1,5 +1,44 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
+    <div class="col-lg-8 col-xl-6 col-md-10">
+        <?= $this->session->flashdata('message'); ?>
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Payment</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="<?= base_url('user/add') ?>">
+                    <div class="form-group row">
+                        <label for="total" class="col-sm-3 col-form-label">Total</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Rp. </span>
+                                </div>
+                                <input type="number" name="total" id="total" readonly class="form-control" aria-label="Username" value="<?= $_SESSION['total']; ?>" aria-describedby="basic-addon1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="money" class="col-sm-3 col-form-label">Paid</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Rp. </span>
+                                </div>
+                                <input type="number" name="money" id="money" class="form-control" value="0" aria-label="Money" aria-describedby="basic-addon2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-around">
+                        <a href="<?= base_url('user/index'); ?>" class="btn btn-outline-danger"><i class="fas fa-backward"></i> Back</a>
+                        <button class="btn btn-outline-primary" type="submit">Pay</button>
+                        <a href="<?= base_url('user/index/unset'); ?>" class="btn btn-outline-danger">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <?php if ($this->session->userdata('shopping')) :
         $session = $this->session->userdata('shopping'); ?>
@@ -47,64 +86,10 @@
                         $_SESSION['total'] = $total;
                         ?>
                     </table>
-                    <div class="row justify-content-end">
-                        <a class="btn btn-outline-primary mr-3" href="<?= base_url('user/checkout') ?>">Check Out</a>
-                        <a href="<?= base_url('user/index/unset'); ?>" class="btn btn-outline-danger mr-3">Cancel</a>
-                    </div>
                 </div>
             </div>
         </div>
     <?php endif; ?>
 
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">List of Items</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col" width="3%">#</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Image</th>
-                            <th>Stock</th>
-                            <th>Add Product</th>
-                        </tr>
-                    </thead>
-                    <tfoot class="thead-light">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Image</th>
-                            <th>Stock</th>
-                            <th width='15%'>Add Product</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        <?php
-                        $i = 1;
-                        foreach ($data as $content) : ?>
-                            <tr>
-                                <th scope="row" class="text-center"><?= $i; ?>.</th>
-                                <td><?= $content->name; ?></td>
-                                <td>Rp. <?= $content->price; ?></td>
-                                <td><img src="<?= base_url('assets/img/items/') . $content->image; ?>" class="img-fluid img-thumbnail" width="100" alt="<?= $content->image; ?>"></td>
-                                <td><?= $content->stock; ?></td>
-                                <td><a href="<?= base_url('user/index/') . $content->item_id; ?>" class="btn btn-primary"><i class="fa fa-fw fa-plus-square"></i><?php echo "  "; ?>Add</a></td>
-                            </tr>
-                        <?php
-                            $i++;
-                        endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
 </div>
-<!-- /.container-fluid -->
 </div>
-<!-- End of Main Content -->

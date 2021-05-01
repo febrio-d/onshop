@@ -12,9 +12,25 @@
 
     <!-- Nav Item -->
     <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('user/index') ?>">
+        <a class="nav-link" href="<?= base_url('user') ?>">
             <i class="fas fa-fw fa-home"></i>
             <span>Home</span></a>
+    </li>
+
+    <li class="nav-item mt-n3">
+        <a class="nav-link" href="<?= base_url('user/history'); ?>">
+            <i class="fas fa-fw fa-history"></i>
+            <span>History</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <li class="nav-item mt-n3">
+        <a class="nav-link" href="<?= base_url('user/about'); ?>">
+            <i class="fas fa-fw fa-info"></i>
+            <span>About me</span>
+        </a>
     </li>
 
     <!-- Divider -->
