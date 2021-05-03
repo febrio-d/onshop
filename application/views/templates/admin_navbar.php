@@ -10,11 +10,54 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!-- Nav Item - My Profile -->
+    <div class="sidebar-heading mt-n3">
+        <i class="fas fa-fw fa-box-open"></i>
+        Items
+    </div>
+
+    <!-- Nav Item -->
     <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('auth/logout'); ?>">
-            <i class="fas fa-fw fa-sign-out-alt"></i>
-            <span>Logout</span></a>
+        <a class="nav-link" href="<?= base_url('admin') ?>">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span></a>
+    </li>
+
+
+
+    <li class="nav-item mt-n3">
+        <a class="nav-link" href="<?= base_url('admin/add_item'); ?>">
+            <i class="fas fa-fw fa-plus-circle"></i>
+            <span>Add Item</span>
+        </a>
+    </li>
+
+
+    <hr class="sidebar-divider">
+
+    <div class="sidebar-heading mt-n3 mb-3">
+        <i class="fas fa-fw fa-users-cog"></i>
+        Users
+    </div>
+
+    <?php if ($this->session->userdata('role_id') == 1) : ?>
+        <li class="nav-item mt-n3">
+            <a class="nav-link" href="<?= base_url('admin/list-user') ?>">
+                <i class="fas fa-fw fa-users"></i>
+                <span>List of Users</span></a>
+        </li>
+
+        <li class="nav-item mt-n3">
+            <a class="nav-link" href="<?= base_url('admin/registration') ?>">
+                <i class="fas fa-fw fa-user-plus"></i>
+                <span>Registration</span></a>
+        </li>
+    <?php endif; ?>
+
+    <li class="nav-item mt-n3">
+        <a class="nav-link" href="<?= base_url('admin/history'); ?>">
+            <i class="fas fa-fw fa-history"></i>
+            <span>History</span>
+        </a>
     </li>
 
     <!-- Divider -->

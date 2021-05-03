@@ -2,7 +2,7 @@
 <ul class="navbar-nav bg-gradient-danger sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center" href="<?= base_url('admin') ?>">
+    <a class="sidebar-brand d-flex align-items-center" href="<?= base_url('user') ?>">
         <img class="rounded-circle img-profile float-left mx-auto" src="<?= base_url('assets/img/') ?>logo.png" width="50" />
         <div class="sidebar-brand-text mx-auto">Onshop</div>
     </a>
@@ -29,7 +29,7 @@
     <li class="nav-item mt-n3">
         <a class="nav-link" href="<?= base_url('user/about'); ?>">
             <i class="fas fa-fw fa-info"></i>
-            <span>About me</span>
+            <span>About Me</span>
         </a>
     </li>
 

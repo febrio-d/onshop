@@ -6,6 +6,8 @@ class Admin extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('admin_model');
+        $this->load->model('user_model');
         if (!$this->session->userdata('email')) {
             redirect('auth');
         } else if ($this->session->userdata('role_id') == 3) {
@@ -15,13 +17,149 @@ class Admin extends CI_Controller
 
     public function index()
     {
-        $data['title'] = 'Admin Page';
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data = $this->admin_model->get_Data();
+        $data['list_item'] = $this->user_model->get_Item();
+        $data['title'] = 'Dashboard';
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/admin_navbar', $data);
         $this->load->view('templates/topbar', $data);
         $this->load->view('admin/index', $data);
         $this->load->view('templates/footer');
+    }
+
+    public function delete_item($id = null)
+    {
+        $this->db->delete('items', ['item_id' => $id]);
+        $rest = $this->db->affected_rows();
+        if ($rest == 0) {
+            $this->session->set_flashdata('message', '<script>window.alert("Item can\'t be deleted!");</script>');
+        }
+        $this->session->set_flashdata('message', '<script>window.alert("Item has been deleted!");</script>');
+        redirect('admin');
+    }
+
+    public function change_item()
+    {
+        $data = $this->user_model->get_Item();
+        $name = htmlspecialchars($this->input->post('name', true));
+        $id = htmlspecialchars($this->input->post('id', true));
+        $price = $this->input->post('price');
+        $upload_image = $_FILES['image']['name'];
+        if ($upload_image) {
+            $config['allowed_types'] = 'jpg|jpeg|png';
+            $config['max_sizes'] = '1024';
+            $config['upload_path'] = './assets/img/items/';
+
+            $this->load->library('upload', $config);
+
+            if ($this->upload->do_upload('image')) {
+                $old_image = $data['user']['image'];
+                if ($old_image != 'default.jpg') {
+                    unlink(FCPATH . 'assets/img/items/' . $old_image);
+                }
+
+                $new_image = $this->upload->data('file_name');
+                $this->db->set('image', $new_image);
+            } else {
+                $this->session->set_flashdata('message', '<script>window.alert("Image is invalid!");</script>');
+                redirect('admin');
+            }
+        }
+
+        if (trim($name) == '' || trim($price) == '') {
+            $this->session->set_flashdata('message', '<script>window.alert("Input can\'t be Null!");</script>');
+            redirect('admin');
+        } elseif ($upload_image == '') {
+            $arr = $this->db->get_where('items', ['item_id' => $id])->row_array();
+            $upload_image = $arr['image'];
+        }
+        $this->db->set([
+            'name' => $name,
+            'price' => $price,
+            'image' => $upload_image
+        ]);
+        $this->db->where('item_id', $id);
+        $this->db->update('items');
+        if ($this->db->affected_rows() < 0) {
+            $this->session->set_flashdata('message', '<script>window.alert("Item doesn\'t changed!");</script>');
+        }
+        redirect('admin');
+    }
+
+    public function stock_item()
+    {
+        $id = $this->input->get_post('id');
+        $stock = $this->input->get_post('item');
+        $data = $this->db->get_where('items', ['item_id' => $id])->row_array();
+        if (intval($data['stock']) == null) {
+            $data['stock'] = 0;
+        }
+        $stock = intval($stock) + intval($data['stock']);
+        if ($stock < 0) {
+            $stock = 0;
+        }
+        $this->db->set('stock', $stock);
+        $this->db->where('item_id', $id);
+        $this->db->update('items');
+        if ($this->db->affected_rows() < 0) {
+            $this->session->set_flashdata('error', '<script>window.alert("Error! Not Item can be Changed!");</script>');
+        }
+        redirect('admin', 'refresh');
+    }
+
+    public function add_item()
+    {
+        $this->form_validation->set_rules('name', 'Name', 'trim|required');
+        $this->form_validation->set_rules('price', 'Price', 'trim|required');
+        $this->form_validation->set_rules('stock', 'Stock', 'trim|required');
+
+        if ($this->form_validation->run() == true) {
+            $this->save();
+        } else {
+            $data = $this->admin_model->get_data();
+            $data['list_item'] = $this->user_model->get_Item();
+            $data['title'] = "Add New Item";
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/admin_navbar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('admin/add-item', $data);
+            $this->load->view('templates/footer');
+        }
+    }
+
+    public function save()
+    {
+        $image = $_FILES['image']['name'];
+        if ($image) {
+            $config['allowed_types'] = 'jpg|jpeg|png';
+            $config['max_sizes'] = '1024';
+            $config['upload_path'] = './assets/img/items/';
+
+            $this->load->library('upload', $config);
+
+            if ($this->upload->do_upload('image')) {
+                $image = $this->upload->data('file_name');
+                $this->db->set('image', $image);
+            } else {
+                $this->upload->display_errors();
+            }
+        } else {
+            $image = 'item.png';
+            $this->db->set('image', $image);
+        }
+
+        $item_code = random_int(1, 9999);
+        $save = [
+            'item_id' => $item_code,
+            'name' => htmlspecialchars($this->input->post('name', true)),
+            'price' => htmlspecialchars($this->input->post('price', true)),
+            'image' => $image,
+            'stock' => htmlspecialchars($this->input->post('stock', true)),
+        ];
+
+        $this->db->insert('items', $save);
+        $this->session->set_flashdata('message', '<script>window.alert("Item successfully added!");</script>');
+        redirect('admin/index');
     }
 }

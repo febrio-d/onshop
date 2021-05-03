@@ -152,8 +152,8 @@ class User extends CI_Controller
 
     public function profile()
     {
-        $data['title'] = "My Profile";
         $data = $this->user_model->get_Data();
+        $data['title'] = "My Profile";
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/user_navbar', $data);
@@ -164,8 +164,8 @@ class User extends CI_Controller
 
     public function edit()
     {
-        $data['title'] = 'Edit Profile';
         $data = $this->user_model->get_Data();
+        $data['title'] = 'Edit Profile';
 
         $this->form_validation->set_rules('name', 'Name', 'required|trim');
 
@@ -207,5 +207,17 @@ class User extends CI_Controller
             $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Your profile has been updated!</div>');
             redirect('user/profile');
         }
+    }
+
+    public function about()
+    {
+        $data = $this->user_model->get_Data();
+        $data['title'] = "About Me";
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/user_navbar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('user/about', $data);
+        $this->load->view('templates/footer');
     }
 }
