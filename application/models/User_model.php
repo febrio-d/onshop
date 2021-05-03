@@ -46,13 +46,13 @@ class User_model extends CI_Model
 
     public function getRecordAll()
     {
-        $data = $this->db->join('user', 'user.id = record.user_id')->order_by('id', 'DESC')->get_where('history', array('onDelete' => '1'));
+        $data = $this->db->join('user', 'user.id = record.user_id')->order_by('record_id', 'DESC')->get_where('record', array('onDelete' => '0'));
         return $data->result();
     }
 
     public function getDetailsHistory($hid)
     {
-        $data = $this->db->where('history_id', $hid)->join('items', 'items.item_id = history.item_id')->get('history');
+        $data = $this->db->where('history_id', $hid)->get('history');
         return $data->result();
     }
 

@@ -103,6 +103,7 @@ class User extends CI_Controller
                 $history = [
                     "history_id" => $random,
                     "item_id" => $item->item_id,
+                    "item_name" => $item->name,
                     "quantity" => $quantity,
                     "price" => $hid['price']
                 ];
@@ -144,6 +145,7 @@ class User extends CI_Controller
             redirect('user/history');
         }
         $data = $this->user_model->get_Data();
+        $this->user_model->getRecordAll();
         $data['title'] = "Bills";
         $data['history'] = $this->user_model->getDetailsHistory($hid);
         $data['record'] = $this->user_model->getRecordByHId($hid);

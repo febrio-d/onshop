@@ -162,4 +162,70 @@ class Admin extends CI_Controller
         $this->session->set_flashdata('message', '<script>window.alert("Item successfully added!");</script>');
         redirect('admin/index');
     }
+
+    public function registration()
+    {
+        $this->form_validation->set_rules('name', 'Name', 'required|trim');
+        $this->form_validation->set_rules('email', 'Email', 'required|trim|is_unique[user.email]', [
+            'is_unique' => 'This email has already registered!'
+        ]);
+        $this->form_validation->set_rules('password1', 'Password', 'required|trim|min_length[8]|matches[password2]', [
+            'matches' => 'Password do not match!',
+            'min_length' => 'Your password must be at least 8 characters.'
+        ]);
+        $this->form_validation->set_rules('password2', 'Password', 'required|trim|matches[password1]');
+
+        if ($this->form_validation->run() == false) {
+            $data = $this->admin_model->get_Data();
+            $data['title'] = 'Admin Registration';
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/admin_navbar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('admin/registration', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $email = $this->input->post('email', true);
+            $data = [
+                'name' => htmlspecialchars($this->input->post('name', true)),
+                'email' => htmlspecialchars($email),
+                'image' => 'user.png',
+                'password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
+                'role_id' => 2,
+                'is_active' => 1,
+                'date_created' => time()
+            ];
+
+            $this->db->insert('user', $data);
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Congratulations! Your account has been created.</div>');
+            redirect('auth');
+        }
+    }
+
+    public function history()
+    {
+        $data = $this->user_model->get_Data();
+        $data['title'] = "History";
+        $data['history'] = $this->user_model->getRecordAll();
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/admin_navbar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('admin/history', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function delete($hid = "")
+    {
+        if ($hid != "") {
+            $del = $this->admin_model->deleteHistory($hid);
+            if ($del > 0) {
+                $this->session->set_flashdata('message', '<script>window.alert("Successfully delete history!");</script>');
+            } else {
+                $this->session->set_flashdata('message', '<script>window.alert("Item can\'t be deleted!");</script>');
+            }
+            redirect('admin/history');
+        } else {
+            $this->session->set_flashdata('message', '<script>window.alert("History don\'t exist!");</script>');
+            redirect('admin/history');
+        }
+    }
 }

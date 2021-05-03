@@ -55,13 +55,7 @@
                         </div>
                         <hr>
                         <div class="row">
-                            <div class="col-md-6">
-                                <address>
-                                    <strong>Billed To:</strong><br>
-                                    <?= $user['name']; ?>
-                                </address>
-                            </div>
-                            <div class="col-md-6 text-right">
+                            <div class="col-md text-right">
                                 <address>
                                     <strong>Order Date:</strong><br>
                                     <?= date("l jS \of F Y h:i:s A", $r->date); ?><br><br>
@@ -76,30 +70,35 @@
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title"><strong>Order summary</strong></h3>
+                            <h3 class="panel-title"><strong>Order Summary</strong></h3>
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-condensed">
                                     <thead>
                                         <tr>
-                                            <td><strong>Item</strong></td>
+                                            <th scope="col" width="3%">#</th>
+                                            <td class="text-center"><strong>Item</strong></td>
                                             <td class="text-center"><strong>Price</strong></td>
                                             <td class="text-center"><strong>Quantity</strong></td>
                                             <td class="text-right"><strong>Totals</strong></td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($history as $content) : ?>
+                                        <?php $i = 1;
+                                        foreach ($history as $content) : ?>
                                             <tr>
-                                                <td><?= $content->name; ?></td>
+                                                <th scope="row" class="text-center"><?= $i; ?>.</th>
+                                                <td class="text-center"><?= $content->item_name; ?></td>
                                                 <td class="text-center">Rp. <?= $content->price; ?></td>
                                                 <td class="text-center"><?= $content->quantity; ?></td>
                                                 <td class="text-right">Rp. <?= $content->price * $content->quantity; ?> </td>
                                             </tr>
-                                        <?php endforeach; ?>
+                                        <?php $i++;
+                                        endforeach; ?>
                                         <?php foreach ($record as $r) : ?>
                                             <tr>
+                                                <td class="thick-line"></td>
                                                 <td class="thick-line"></td>
                                                 <td class="thick-line"></td>
                                                 <td class="thick-line text-center"><strong>Total</strong></td>
@@ -108,10 +107,12 @@
                                             <tr>
                                                 <td class="no-line"></td>
                                                 <td class="no-line"></td>
+                                                <td class="no-line"></td>
                                                 <td class="no-line text-center"><strong>Paid</strong></td>
                                                 <td class="no-line text-right">Rp. <?= $r->paid; ?></td>
                                             </tr>
                                             <tr>
+                                                <td class="no-line"></td>
                                                 <td class="no-line"></td>
                                                 <td class="no-line"></td>
                                                 <td class="no-line text-center"><strong>Change</strong></td>
