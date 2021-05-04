@@ -9,6 +9,7 @@ class User_model extends CI_Model
     {
         $email = $this->session->userdata('email');
         $data['user'] = $this->db->get_where('user', ['email' => $email])->row_array();
+        $data['role'] = 'user';
         return $data;
     }
 
@@ -40,7 +41,7 @@ class User_model extends CI_Model
 
     public function getRecordByRId($user_id)
     {
-        $data = $this->db->where('user_id', $user_id)->order_by('record_id', 'DESC')->get('record');
+        $data = $this->db->where('user_id', $user_id)->where('onDelete', '0')->order_by('record_id', 'DESC')->get('record');
         return $data->result();
     }
 

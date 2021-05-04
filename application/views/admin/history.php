@@ -28,17 +28,23 @@
                     <tbody>
                         <?php
                         $i = 1;
-                        foreach ($history as $content) : ?>
-                            <tr>
-                                <th scope="row" class="text-center"><?= $i; ?>.</th>
-                                <td><?= $content->name ?></td>
-                                <td><?= $content->history_id; ?></td>
-                                <td>Rp. <?= $content->total; ?></td>
-                                <td><?= date("l jS \of F Y h:i:s A", $content->date); ?></td>
-                                <td><a href="<?= base_url('user/detail/') . $content->history_id; ?>" target="_blank" class="btn btn-primary"><i class="fas fa-fw fa-info"></i>Detail</a></td>
-                            </tr>
+                        foreach ($history as $content) :
+                            if ($content->role_id != '1') :
+                        ?>
+                                <tr>
+                                    <th scope="row" class="text-center"><?= $i; ?>.</th>
+                                    <td><?= $content->name ?></td>
+                                    <td><?= $content->history_id; ?></td>
+                                    <td>Rp. <?= $content->total; ?></td>
+                                    <td><?= date("l jS \of F Y h:i:s A", $content->date); ?></td>
+                                    <td>
+                                        <a href="<?= base_url('user/detail/') . $content->history_id; ?>" target="_blank" class="btn btn-primary"><i class="fas fa-fw fa-info"></i>Detail</a>
+                                        <a href="<?= base_url('admin/delete/') . $content->record_id; ?>" class="btn btn-danger"><i class="fas fa-fw fa-trash"></i>Delete</a>
+                                    </td>
+                                </tr>
                         <?php
-                            $i++;
+                                $i++;
+                            endif;
                         endforeach; ?>
                     </tbody>
                 </table>

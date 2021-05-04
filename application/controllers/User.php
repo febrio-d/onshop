@@ -154,6 +154,9 @@ class User extends CI_Controller
 
     public function profile()
     {
+        if (!$this->session->userdata('role_id' == 3)) {
+            redirect('admin');
+        }
         $data = $this->user_model->get_Data();
         $data['title'] = "My Profile";
 
@@ -166,6 +169,9 @@ class User extends CI_Controller
 
     public function edit()
     {
+        if (!$this->session->userdata('role_id' == 3)) {
+            redirect('admin');
+        }
         $data = $this->user_model->get_Data();
         $data['title'] = 'Edit Profile';
 

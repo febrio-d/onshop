@@ -163,8 +163,104 @@ class Admin extends CI_Controller
         redirect('admin/index');
     }
 
+    public function list_user()
+    {
+        if (!$this->session->userdata('role_id' == 1)) {
+            redirect('admin');
+        }
+        $data = $this->admin_model->get_data();
+        $data['list'] = $this->admin_model->get_list_user();
+        $data['title'] = "List of Users";
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/admin_navbar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('admin/list-user', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function delete_user($id = null)
+    {
+        if (!$this->session->userdata('role_id' == 1)) {
+            redirect('admin');
+        }
+        $this->db->delete('user', ['id' => $id]);
+        $rest = $this->db->affected_rows();
+        if ($rest == 0) {
+            $this->session->set_flashdata('message', '<script>window.alert("The account can\'t be deleted!");</script>');
+        } else {
+            $this->session->set_flashdata('message', '<script>window.alert("The account has been deleted!");</script>');
+        }
+        redirect('admin/list_user');
+    }
+
+    public function change_user()
+    {
+        if (!$this->session->userdata('role_id' == 1)) {
+            redirect('admin');
+        }
+        $this->form_validation->set_rules('name', 'Name', 'trim|required');
+        $this->form_validation->set_rules('email', 'Email', 'trim|required|is_unique[user.email]', [
+            'is_unique' => 'This Email has already existed!'
+        ]);
+        $name = htmlspecialchars($this->input->get_post('name', true));
+        $email = htmlspecialchars($this->input->get_post('email', true));
+        $id = $this->input->get_post('id');
+        $data = [
+            'name' => $name,
+            'email' => $email
+        ];
+
+        $this->db->set($data);
+        $this->db->where('id', $id);
+        $this->db->update('user');
+        $rest = $this->db->affected_rows();
+        if ($rest == 0) {
+            $this->session->set_flashdata('message', '<script>window.alert("The account can\'t be changed!");</script>');
+        } else {
+            $this->session->set_flashdata('message', '<script>window.alert("The account has been changed!");</script>');
+        }
+        redirect('admin/list_user');
+    }
+
+    public function block_user($id = null)
+    {
+        if (!$this->session->userdata('role_id' == 1)) {
+            redirect('admin');
+        }
+        $this->db->set('is_active', '0');
+        $this->db->where('id', $id);
+        $this->db->update('user');
+        $rest = $this->db->affected_rows();
+        if ($rest == 0) {
+            $this->session->set_flashdata('message', '<script>window.alert("The account can\'t be blocked!");</script>');
+        } else {
+            $this->session->set_flashdata('message', '<script>window.alert("The account has been blocked!");</script>');
+        }
+        redirect('admin/list_user');
+    }
+
+    public function activate_user($id = null)
+    {
+        if (!$this->session->userdata('role_id' == 1)) {
+            redirect('admin');
+        }
+        $this->db->set('is_active', '1');
+        $this->db->where('id', $id);
+        $this->db->update('user');
+        $rest = $this->db->affected_rows();
+        if ($rest == 0) {
+            $this->session->set_flashdata('message', '<script>window.alert("The account can\'t be activated!");</script>');
+        } else {
+            $this->session->set_flashdata('message', '<script>window.alert("The account has been activated!");</script>');
+        }
+        redirect('admin/list_user');
+    }
+
     public function registration()
     {
+        if (!$this->session->userdata('role_id' == 1)) {
+            redirect('admin');
+        }
         $this->form_validation->set_rules('name', 'Name', 'required|trim');
         $this->form_validation->set_rules('email', 'Email', 'required|trim|is_unique[user.email]', [
             'is_unique' => 'This email has already registered!'
@@ -188,7 +284,7 @@ class Admin extends CI_Controller
             $data = [
                 'name' => htmlspecialchars($this->input->post('name', true)),
                 'email' => htmlspecialchars($email),
-                'image' => 'user.png',
+                'image' => 'default.jpg',
                 'password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
                 'role_id' => 2,
                 'is_active' => 1,
@@ -226,6 +322,65 @@ class Admin extends CI_Controller
         } else {
             $this->session->set_flashdata('message', '<script>window.alert("History don\'t exist!");</script>');
             redirect('admin/history');
+        }
+    }
+
+    public function profile()
+    {
+        $data = $this->admin_model->get_Data();
+        $data['title'] = "My Profile";
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/admin_navbar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('admin/profile', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function edit()
+    {
+        $data = $this->admin_model->get_Data();
+        $data['title'] = 'Edit Profile';
+
+        $this->form_validation->set_rules('name', 'Name', 'required|trim');
+
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/admin_navbar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('admin/edit', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $name = $this->input->post('name');
+            $email = $this->input->post('email');
+
+            $upload_image = $_FILES['image']['name'];
+            if ($upload_image) {
+                $config['allowed_types'] = 'jpg|jpeg|png';
+                $config['max_sizes'] = '1024';
+                $config['upload_path'] = './assets/img/profile/';
+
+                $this->load->library('upload', $config);
+
+                if ($this->upload->do_upload('image')) {
+                    $old_image = $data['user']['image'];
+                    if ($old_image != 'default.jpg') {
+                        unlink(FCPATH . 'assets/img/profile/' . $old_image);
+                    }
+
+                    $new_image = $this->upload->data('file_name');
+                    $this->db->set('image', $new_image);
+                } else {
+                    echo $this->upload->display_errors();
+                }
+            }
+
+            $this->db->set('name', $name);
+            $this->db->where('email', $email);
+            $this->db->update('user');
+
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Your profile has been updated!</div>');
+            redirect('admin/profile');
         }
     }
 }

@@ -8,10 +8,14 @@
     </a>
 
     <!-- Divider -->
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider my-0">
+
+    <div class="sidebar-heading">
+        Items
+    </div>
 
     <!-- Nav Item -->
-    <li class="nav-item">
+    <li class="nav-item mt">
         <a class="nav-link" href="<?= base_url('user') ?>">
             <i class="fas fa-fw fa-home"></i>
             <span>Home</span></a>
@@ -24,9 +28,13 @@
     </li>
 
     <!-- Divider -->
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider my-0">
 
-    <li class="nav-item mt-n3">
+    <div class="sidebar-heading">
+        Others
+    </div>
+
+    <li class="nav-item">
         <a class="nav-link" href="<?= base_url('user/about'); ?>">
             <i class="fas fa-fw fa-info"></i>
             <span>About Me</span>
@@ -35,6 +43,15 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
+
+    <?php if ($this->session->userdata('role_id') <= 2) { ?>
+        <li class="nav-item mt-n3">
+            <a class="nav-link" href="<?= base_url('admin'); ?>">
+                <i class="fas fa-fw fa-arrow-alt-circle-right"></i>
+                <span>Back to the Admin Pages</span>
+            </a>
+        </li>
+    <?php } ?>
 
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">

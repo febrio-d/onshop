@@ -8,9 +8,9 @@
     </a>
 
     <!-- Divider -->
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider my-0">
 
-    <div class="sidebar-heading mt-n3">
+    <div class="sidebar-heading">
         <i class="fas fa-fw fa-box-open"></i>
         Items
     </div>
@@ -41,7 +41,7 @@
 
     <?php if ($this->session->userdata('role_id') == 1) : ?>
         <li class="nav-item mt-n3">
-            <a class="nav-link" href="<?= base_url('admin/list-user') ?>">
+            <a class="nav-link" href="<?= base_url('admin/list_user') ?>">
                 <i class="fas fa-fw fa-users"></i>
                 <span>List of Users</span></a>
         </li>
@@ -62,6 +62,13 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
+
+    <li class="nav-item mt-n3">
+        <a class="nav-link" href="<?= base_url('user'); ?>">
+            <i class="fas fa-fw fa-arrow-alt-circle-right"></i>
+            <span>Go to the User Pages</span>
+        </a>
+    </li>
 
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
