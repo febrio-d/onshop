@@ -165,7 +165,7 @@ class Admin extends CI_Controller
 
     public function list_user()
     {
-        if (!$this->session->userdata('role_id' == 1)) {
+        if ($this->session->userdata('role_id >', '1')) {
             redirect('admin');
         }
         $data = $this->admin_model->get_data();
@@ -180,7 +180,7 @@ class Admin extends CI_Controller
 
     public function delete_user($id = null)
     {
-        if (!$this->session->userdata('role_id' == 1)) {
+        if ($this->session->userdata('role_id >', '1')) {
             redirect('admin');
         }
         $this->db->delete('user', ['id' => $id]);
@@ -195,7 +195,7 @@ class Admin extends CI_Controller
 
     public function change_user()
     {
-        if (!$this->session->userdata('role_id' == 1)) {
+        if ($this->session->userdata('role_id >', '1')) {
             redirect('admin');
         }
         $this->form_validation->set_rules('name', 'Name', 'trim|required');
@@ -224,7 +224,7 @@ class Admin extends CI_Controller
 
     public function block_user($id = null)
     {
-        if (!$this->session->userdata('role_id' == 1)) {
+        if ($this->session->userdata('role_id >', '1')) {
             redirect('admin');
         }
         $this->db->set('is_active', '0');
@@ -241,7 +241,7 @@ class Admin extends CI_Controller
 
     public function activate_user($id = null)
     {
-        if (!$this->session->userdata('role_id' == 1)) {
+        if ($this->session->userdata('role_id >', '1')) {
             redirect('admin');
         }
         $this->db->set('is_active', '1');
@@ -258,7 +258,7 @@ class Admin extends CI_Controller
 
     public function registration()
     {
-        if (!$this->session->userdata('role_id' == 1)) {
+        if ($this->session->userdata('role_id >', '1')) {
             redirect('admin');
         }
         $this->form_validation->set_rules('name', 'Name', 'required|trim');
