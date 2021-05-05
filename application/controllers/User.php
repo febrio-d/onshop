@@ -154,7 +154,7 @@ class User extends CI_Controller
 
     public function profile()
     {
-        if (!$this->session->userdata('role_id' == 3)) {
+        if ($this->session->userdata('role_id <', '3')) {
             redirect('admin');
         }
         $data = $this->user_model->get_Data();
