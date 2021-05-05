@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2021 at 08:40 AM
+-- Generation Time: May 05, 2021 at 06:25 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.11
 
@@ -46,7 +46,9 @@ INSERT INTO `history` (`id`, `history_id`, `item_id`, `item_name`, `price`, `qua
 (3, 50570, 1752, 'Netflix', 35000, 1),
 (4, 65828, 1752, 'Netflix', 35000, 1),
 (5, 88928, 2894, 'Apple Music', 10000, 2),
-(6, 88928, 3162, 'Spotify', 25000, 1);
+(6, 88928, 3162, 'Spotify', 25000, 1),
+(7, 43146, 415, 'Disney+ Hotstar', 23000, 1),
+(8, 43146, 2894, 'Apple Music', 10000, 1);
 
 -- --------------------------------------------------------
 
@@ -67,9 +69,9 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`item_id`, `name`, `price`, `image`, `stock`) VALUES
-(415, 'Disney+ Hotstar', 23000, 'disney+.jpg', 50),
+(415, 'Disney+ Hotstar', 23000, 'disney+.jpg', 49),
 (1752, 'Netflix', 35000, 'netflix.jpg', 49),
-(2894, 'Apple Music', 10000, 'applemusic.jpg', 48),
+(2894, 'Apple Music', 10000, 'applemusic.jpg', 47),
 (3162, 'Spotify', 25000, 'spotify.jpg', 49);
 
 -- --------------------------------------------------------
@@ -96,7 +98,8 @@ INSERT INTO `record` (`record_id`, `user_id`, `history_id`, `total`, `paid`, `da
 (1, 1, 11411, 73000, 75000, 1620041301, '0'),
 (2, 1, 50570, 35000, 50000, 1620041438, '0'),
 (3, 3, 65828, 35000, 40000, 1620047678, '1'),
-(4, 3, 88928, 45000, 50000, 1620125388, '0');
+(4, 3, 88928, 45000, 50000, 1620125388, '0'),
+(5, 3, 43146, 33000, 35000, 1620247676, '0');
 
 -- --------------------------------------------------------
 
@@ -158,6 +161,13 @@ CREATE TABLE `user_token` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `user_token`
+--
+
+INSERT INTO `user_token` (`id`, `email`, `token`, `date_created`) VALUES
+(3, 'crazypipel87@gmail.com', 'Bxk0WFps8equx9mL8UwGub9CZqo6MBZubDRnF0a89nY=', 1620226369);
+
+--
 -- Indexes for dumped tables
 --
 
@@ -207,13 +217,13 @@ ALTER TABLE `user_token`
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `record`
 --
 ALTER TABLE `record`
-  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -231,7 +241,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user_token`
 --
 ALTER TABLE `user_token`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
